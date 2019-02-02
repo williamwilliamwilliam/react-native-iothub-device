@@ -10,7 +10,7 @@ Android is the only platform implemented right now
  - You, as connected a device, can report Device Twin Reported Properties
  
  Tested using react-native 0.58.3 starter project
-
+ - `react-native init AwesomeProject --version react-native@0.58.3`
 
 ### Manual installation
 
@@ -60,6 +60,8 @@ import com.williamwilliamwilliam.iothub.IoTHubDevicePackage;
     }
 ```
 
+Run your app  
+ - `react-native run-android`
 
 ### Usage
 
