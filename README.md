@@ -14,7 +14,7 @@ Android is the only platform implemented right now
 
 ### Manual installation
 
-#####Prerequisite: configure your app as a multidex app (because Microsoft's Android SDK requires it)
+##### Prerequisite: configure your app as a multidex app (because Microsoft's Android SDK requires it)
 android/build.gradle  
 ```
   defaultConfig {
@@ -29,7 +29,7 @@ android/build.gradle
 ```   
 
 
-#####Setup this library
+##### Setup this library
 
 `$ npm install https://github.com/williamwilliamwilliam/react-native-iothub-device.git --save`
 
