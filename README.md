@@ -8,6 +8,8 @@ Android is the only platform implemented right now
  - Uses AMQP over WebSockets
  - You, as connected a device, to Device Twin desired property changes
  - You, as connected a device, can report Device Twin Reported Properties
+ 
+ Tested using react-native 0.58.3 starter project
 
 
 ### Manual installation
