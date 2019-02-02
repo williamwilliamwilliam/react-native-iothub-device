@@ -14,7 +14,7 @@
 `$ npm install react-native-iothub-device --save`
 
 build.gradle  
-`multiDexEnabled true`
+`multiDexEnabled true`  
 `implementation 'com.android.support:multidex:1.0.3'`  
 `implementation project(path: ':react-native-iothub-device')`
 
