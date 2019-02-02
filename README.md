@@ -6,13 +6,40 @@ https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-how-to-develop-for-mobile
 
 Android is the only platform implemented right now
  - Uses AMQP over WebSockets
- - You can subscribe to Device Twin desired property changes
- - You, as a device, can report Device Twin Reported Properties
+ - You, as connected a device, to Device Twin desired property changes
+ - You, as connected a device, can report Device Twin Reported Properties
 
 
-## Getting started
+### Manual installation
 
-`$ npm install react-native-iothub-device --save` (not actually published to npm yet)
+`$ npm install https://github.com/williamwilliamwilliam/react-native-iothub-device.git --save`
+
+build.gradle  
+`multiDexEnabled true`  
+`implementation 'com.android.support:multidex:1.0.3'`  
+`implementation project(path: ':react-native-iothub-device')`
+
+settings.gradle  
+`include 'react-native-iothub-device'`  
+`project(':react-native-iothub-device').projectDir = new File(settingsDir, '../node_modules/react-native-iothub-device/android')`
+
+
+Extend your MainApplication.java  
+`public class MainApplication `***extends MultiDexApplication*** `implements ReactApplication`
+
+Add to MainApplication.java  
+```
+import com.williamwilliamwilliam.iothub.IoTHubDevicePackage;
+...
+    @Override
+    protected List<ReactPackage> getPackages() {
+      return Arrays.<ReactPackage>asList(
+          new MainReactPackage(),
+              new IoTHubDevicePackage()
+      );
+    }
+```
+
 
 ### Usage
 
@@ -45,18 +72,3 @@ connectToHub(
     this.onDesiredPropertyUpdate);
 ```
 
-### Manual installation
-
-`$ npm install react-native-iothub-device --save`
-
-build.gradle  
-`multiDexEnabled true`  
-`implementation 'com.android.support:multidex:1.0.3'`  
-`implementation project(path: ':react-native-iothub-device')`
-
-
-Extend your MainApplication.java  
-`public class MainApplication `***extends MultiDexApplication*** `implements ReactApplication`
-
-Add to MainApplication.java  
-`new IoTHubDevicePackage()`
