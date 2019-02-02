@@ -1,4 +1,4 @@
-package com.reactnativetest.iothub;
+package com.williamwilliamwilliam.iothub;
 
 import android.support.annotation.Nullable;
 

@@ -1,4 +1,4 @@
-package com.reactnativetest.iothub;
+package com.williamwilliamwilliam.iothub;
 
 import com.facebook.react.ReactPackage;
 import com.facebook.react.bridge.JavaScriptModule;

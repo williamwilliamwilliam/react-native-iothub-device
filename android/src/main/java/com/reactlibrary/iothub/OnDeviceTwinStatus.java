@@ -1,4 +1,4 @@
-package com.reactnativetest.iothub;
+package com.williamwilliamwilliam.iothub;
 
 import android.util.Log;
 
