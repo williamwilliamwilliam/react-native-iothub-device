@@ -14,22 +14,40 @@ Android is the only platform implemented right now
 
 ### Manual installation
 
+- #####Prerequisite: configure your app as a multidex app (because Microsoft's Android SDK requires it)
+android/build.gradle  
+```
+  defaultConfig {
+     ...
+    multiDexEnabled true //Add this line
+  }
+  
+  dependencies {
+    ...
+    implementation 'com.android.support:multidex:1.0.3' //and this one
+  }
+```   
+
+
+- #####Setup this library
+
 `$ npm install https://github.com/williamwilliamwilliam/react-native-iothub-device.git --save`
 
-build.gradle  
-`multiDexEnabled true`  
-`implementation 'com.android.support:multidex:1.0.3'`  
-`implementation project(path: ':react-native-iothub-device')`
+android/build.gradle  
+```
+ dependencies {
+     ...
+     implementation project(':react-native-iothub-device')
+ }
+ ```
 
-settings.gradle  
-`include 'react-native-iothub-device'`  
-`project(':react-native-iothub-device').projectDir = new File(settingsDir, '../node_modules/react-native-iothub-device/android')`
+android/settings.gradle 
+```
+include '...', 'react-native-iothub-device'
+project(':react-native-iothub-device').projectDir = new File(settingsDir, '../node_modules/react-native-iothub-device/android')
+ ``` 
 
-
-Extend your MainApplication.java  
-`public class MainApplication `***extends MultiDexApplication*** `implements ReactApplication`
-
-Add to MainApplication.java  
+Add to your MainApplication.java  
 ```
 import com.williamwilliamwilliam.iothub.IoTHubDevicePackage;
 ...
