@@ -1,13 +1,49 @@
 
 # react-native-iothub-device
 
+Develop for mobile devices using Azure IoT SDKs:
+https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-how-to-develop-for-mobile-devices
+
+Android is the only platform implemented right now
+ - Uses AMQP over WebSockets
+ - You can subscribe to Device Twin desired property changes
+ - You, as a device, can report Device Twin Reported Properties
+
+
 ## Getting started
 
-`$ npm install react-native-iothub-device --save`
+`$ npm install react-native-iothub-device --save` (not actually published to npm yet)
 
-### Mostly automatic installation
+### Usage
 
-`$ react-native link react-native-iothub-device`
+```javascript
+import {connectToHub, reportProperties} from 'react-native-iothub-device';
+
+
+onDesiredPropertyUpdate = (property) => {
+    console.log(property);
+}
+onConnectionSuccess = (success) => {
+    reportProperties({
+        testBoolean: true,
+        testNumber: new Date().getTime(),
+        testString: "string",
+        thisPropertyWillBeDeletedFromTheTwinBecauseNULL: null
+    });
+}
+onConnectionFailure = (failure) => {
+    console.error(failure)
+}
+const connectionString = 'HostName=***************.azure-devices.net;DeviceId=******************;SharedAccessKey=**********************';
+const desiredPropertySubscriptions = ['tellMe', 'somethingGood'];
+connectToHub(
+    connectionString,
+    desiredPropertySubscriptions,
+    this.onConnectionSuccess,
+    this.onConnectionFailure,
+    this.onDeviceTwinPropertyRetrieved,
+    this.onDesiredPropertyUpdate);
+```
 
 ### Manual installation
 
@@ -24,45 +60,3 @@ Extend your MainApplication.java
 
 Add to MainApplication.java  
 `new IoTHubDevicePackage()`
-
-
-
-#### iOS
-
-1. In XCode, in the project navigator, right click `Libraries` ➜ `Add Files to [your project's name]`
-2. Go to `node_modules` ➜ `react-native-iothub-device` and add `RNReactNativeIothubDevice.xcodeproj`
-3. In XCode, in the project navigator, select your project. Add `libRNReactNativeIothubDevice.a` to your project's `Build Phases` ➜ `Link Binary With Libraries`
-4. Run your project (`Cmd+R`)<
-
-#### Android
-
-1. Open up `android/app/src/main/java/[...]/MainActivity.java`
-  - Add `import com.reactlibrary.RNReactNativeIothubDevicePackage;` to the imports at the top of the file
-  - Add `new RNReactNativeIothubDevicePackage()` to the list returned by the `getPackages()` method
-2. Append the following lines to `android/settings.gradle`:
-  	```
-  	include ':react-native-iothub-device'
-  	project(':react-native-iothub-device').projectDir = new File(rootProject.projectDir, 	'../node_modules/react-native-iothub-device/android')
-  	```
-3. Insert the following lines inside the dependencies block in `android/app/build.gradle`:
-  	```
-      compile project(':react-native-iothub-device')
-  	```
-
-#### Windows
-[Read it! :D](https://github.com/ReactWindows/react-native)
-
-1. In Visual Studio add the `RNReactNativeIothubDevice.sln` in `node_modules/react-native-iothub-device/windows/RNReactNativeIothubDevice.sln` folder to their solution, reference from their app.
-2. Open up your `MainPage.cs` app
-  - Add `using React.Native.Iothub.Device.RNReactNativeIothubDevice;` to the usings at the top of the file
-  - Add `new RNReactNativeIothubDevicePackage()` to the `List<IReactPackage>` returned by the `Packages` method
-
-
-## Usage
-```javascript
-import RNReactNativeIothubDevice from 'react-native-iothub-device';
-
-// TODO: What to do with the module?
-RNReactNativeIothubDevice;
-```
-  
