@@ -1,5 +1,3 @@
-'use strict'
-
 import {DeviceEventEmitter, NativeModules} from 'react-native';
 
 export function connectToHub(connectionString, desiredPropertySubscriptions, connectionSuccess, connectionFailure, onDeviceTwinPropertyRetrieved, onDesiredPropertyUpdate){
