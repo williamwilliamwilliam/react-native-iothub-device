@@ -23,9 +23,9 @@ export async function subscribeToTwinDesiredProperties(propertyKey, success, fai
 }
 
 /**
- * {testValue:12345, testValue2:"12345", testValue3: true}
- * @param properties
- *  * @returns {Promise}
+ * @param {Object[]} properties - Example input: {testValue:12345, testValue2:"12345", testValue3: true}
+
+ * @returns {Promise}
  */
 export function reportProperties(properties) {
     //translate simple json map to a key/value array
