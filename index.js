@@ -1,5 +1,5 @@
 import {NativeEventEmitter, NativeModules} from 'react-native';
-
+export const {IoTHubDeviceModule} = NativeModules;
 /**
  * Returns Promise so you can await
  *
@@ -9,17 +9,17 @@ import {NativeEventEmitter, NativeModules} from 'react-native';
  * @returns {Promise}
  */
 export function connectToHub(connectionString, desiredPropertySubscriptions, onDesiredPropertyUpdate){
-    new NativeEventEmitter(NativeModules.IoTHubDevice).addListener('onDesiredPropertyUpdate', (event) => {
+    new NativeEventEmitter(IoTHubDeviceModule).addListener('onDesiredPropertyUpdate', (event) => {
         if(event.propertyJson){
             const property = JSON.parse(event.propertyJson);
             onDesiredPropertyUpdate(property.property);
         }
     });
 
-    return NativeModules.IoTHubDeviceModule.connectToHub(connectionString, desiredPropertySubscriptions);
+    return IoTHubDeviceModule.connectToHub(connectionString, desiredPropertySubscriptions);
 }
 export async function subscribeToTwinDesiredProperties(propertyKey, success, failure){
-    return await NativeModules.IoTHubDeviceModule.subscribeToTwinDesiredProperties(propertyKey, success, failure);
+    return await IoTHubDeviceModule.subscribeToTwinDesiredProperties(propertyKey, success, failure);
 }
 
 /**
