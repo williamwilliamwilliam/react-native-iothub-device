@@ -14,6 +14,32 @@ Android is the only platform implemented right now
 
 ### Manual installation
 
+#### iOS Instructions
+$ gem install cocoapods  
+$ cd ios  
+$ pod init
+
+###### these might end up being in the library instead of implemnting app
+
+https://github.com/Azure/azure-iot-sdk-c/blob/master/iothub_client/samples/ios/CocoaPods.md  
+
+Podfile
+```
+ pod 'AzureIoTHubClient', '1.2.4'  
+ pod 'AzureIoTuAmqp', '1.2.4'
+```
+
+Header searcg path for Objective C usage  
+```
+${PODS_ROOT}/AzureIoTHubClient/inc/
+${PODS_ROOT}/AzureIoTUtility/inc/
+${PODS_ROOT}/AzureIoTuMqtt/inc/
+${PODS_ROOT}/AzureIoTuAmqp/inc/
+```
+ 
+
+#### Android Instructions
+
 ##### Prerequisite: configure your app as a multidex app (because Microsoft's Android SDK requires it)
 android/build.gradle  
 ```
@@ -69,28 +95,25 @@ Run your app
 import {connectToHub, reportProperties} from 'react-native-iothub-device';
 
 
-onDesiredPropertyUpdate = (property) => {
-    console.log(property);
-}
-onConnectionSuccess = (success) => {
-    reportProperties({
+const joinTheInterwebOfThings = async () =>{
+    const connectionString = 'HostName=********.azure-devices.net;DeviceId=***********;SharedAccessKey=****************';
+    const desiredPropertySubscriptions = ['tellMe', 'somethingGood'];
+    const onDesiredPropertyUpdate = (property) => {
+        console.log(property); // {key: "tellMe", value: "who's a good device?"}
+    }
+
+    await connectToHub(
+        connectionString,
+        desiredPropertySubscriptions,
+        onDesiredPropertyUpdate);
+
+    await reportProperties({
         testBoolean: true,
         testNumber: new Date().getTime(),
-        testString: "string",
-        thisPropertyWillBeDeletedFromTheTwinBecauseNULL: null
+        testString: "here's something",
+        thisPropertyWontExistOnTheTwinAnymore: null
     });
 }
-onConnectionFailure = (failure) => {
-    console.error(failure)
-}
-const connectionString = 'HostName=***************.azure-devices.net;DeviceId=******************;SharedAccessKey=**********************';
-const desiredPropertySubscriptions = ['tellMe', 'somethingGood'];
-connectToHub(
-    connectionString,
-    desiredPropertySubscriptions,
-    this.onConnectionSuccess,
-    this.onConnectionFailure,
-    this.onDeviceTwinPropertyRetrieved,
-    this.onDesiredPropertyUpdate);
+joinTheInterwebOfThings();
 ```
 

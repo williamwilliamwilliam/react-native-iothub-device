@@ -1,24 +1,33 @@
-import {DeviceEventEmitter, NativeModules} from 'react-native';
+import {NativeEventEmitter, NativeModules} from 'react-native';
 
-export function connectToHub(connectionString, desiredPropertySubscriptions, connectionSuccess, connectionFailure, onDeviceTwinPropertyRetrieved, onDesiredPropertyUpdate){
-    DeviceEventEmitter.addListener('onDesiredPropertyUpdate', (event) => {
+/**
+ * Returns Promise so you can await
+ *
+ * @param connectionString
+ * @param desiredPropertySubscriptions
+ * @param onDesiredPropertyUpdate
+ * @returns {Promise}
+ */
+export function connectToHub(connectionString, desiredPropertySubscriptions, onDesiredPropertyUpdate){
+    new NativeEventEmitter(NativeModules.IoTHubDevice).addListener('onDesiredPropertyUpdate', (event) => {
         if(event.propertyJson){
             const property = JSON.parse(event.propertyJson);
             onDesiredPropertyUpdate(property.property);
         }
     });
 
-    NativeModules.IoTHubDeviceModule.connectToHub(connectionString, desiredPropertySubscriptions, connectionSuccess, connectionFailure);
+    return NativeModules.IoTHubDeviceModule.connectToHub(connectionString, desiredPropertySubscriptions);
 }
-export function subscribeToTwinDesiredProperties(propertyKey, success, failure){
-    NativeModules.IoTHubDeviceModule.subscribeToTwinDesiredProperties(propertyKey, success, failure);
+export async function subscribeToTwinDesiredProperties(propertyKey, success, failure){
+    return await NativeModules.IoTHubDeviceModule.subscribeToTwinDesiredProperties(propertyKey, success, failure);
 }
 
-/** onDeviceTwinPropertyRetrieved
+/**
  * {testValue:12345, testValue2:"12345", testValue3: true}
  * @param properties
+ *  * @returns {Promise}
  */
-export function reportProperties(properties, success, failure) {
+export function reportProperties(properties) {
     //translate simple json map to a key/value array
 
     const keyValueArray = [];
@@ -29,5 +38,5 @@ export function reportProperties(properties, success, failure) {
         });
     });
 
-    NativeModules.IoTHubDeviceModule.sendReportedProperties(keyValueArray, success, failure);
+    return NativeModules.IoTHubDeviceModule.sendReportedProperties(keyValueArray);
 }

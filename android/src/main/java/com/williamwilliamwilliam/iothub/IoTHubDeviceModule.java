@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.facebook.common.internal.Sets;
 import com.facebook.react.bridge.Callback;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
@@ -65,7 +66,7 @@ public class IoTHubDeviceModule extends ReactContextBaseJavaModule  {
     }
 
     @ReactMethod
-    public void sendReportedProperties(ReadableArray array, Callback success, Callback failure) {
+    public void sendReportedProperties(ReadableArray array, Promise promise) {
         Set<Property> propertiesToSet = new LinkedHashSet<>();
         for(int i = 0; i < array.size(); i++){
             ReadableMap map = array.getMap(i);
@@ -75,13 +76,13 @@ public class IoTHubDeviceModule extends ReactContextBaseJavaModule  {
         }
         try {
             client.sendReportedProperties(propertiesToSet);
-            if(success != null){
-                success.invoke();
+            if(promise != null){
+                promise.resolve(true);
             }
         } catch (IOException e) {
             Log.e(this.getClass().getSimpleName(), e.getMessage(), e);
-            if(failure != null){
-                failure.invoke(e.getMessage());
+            if(promise != null){
+                promise.reject(e);
             };
         }
     }
@@ -115,22 +116,21 @@ public class IoTHubDeviceModule extends ReactContextBaseJavaModule  {
     }
 
     @ReactMethod
-    public void subscribeToTwinDesiredProperties(String desiredProperty, Callback success, Callback failure) {
+    public void subscribeToTwinDesiredProperties(String desiredProperty, Promise promise) {
         Log.i(this.getClass().getSimpleName(), "Subscribing to desired property "+desiredProperty);
         try{
             desiredPropertySubscriptions.put(new Property(desiredProperty, null), new Pair<TwinPropertyCallBack, Object>(onDesiredPropertyUpdate, null));
-
             client.subscribeToTwinDesiredProperties(desiredPropertySubscriptions);
-            success.invoke();
+            promise.resolve(true);
         }catch(Exception e){
             Log.e(this.getClass().getSimpleName(), "There was a problem subscribing to a IoT Device Twin property. "+e.getMessage(), e);
-            failure.invoke(e.getMessage());
+            promise.reject(e);
         }
 
     }
 
     @ReactMethod
-    public void connectToHub(String connectionString, ReadableArray desiredPropertySubscriptions, Callback success, Callback failure) {
+    public void connectToHub(String connectionString, ReadableArray desiredPropertySubscriptions, Promise promise) {
         try {
             initializeDeviceClient(connectionString);
             client.startDeviceTwin(onDeviceTwinStatus,
@@ -138,11 +138,11 @@ public class IoTHubDeviceModule extends ReactContextBaseJavaModule  {
                     onDeviceTwinPropertyRetrieved,
                     null);
             subscribeToDesiredProperties(desiredPropertySubscriptions);
-            success.invoke("Successfully connected!");
+            promise.resolve("Successfully connected!");
         } catch (Exception e){
             String message = "There was a problem connecting to IoT Hub. "+e.getMessage();
             Log.e(this.getClass().getSimpleName(), message, e);
-            failure.invoke(message);
+            promise.reject(this.getClass().getSimpleName(), e);
         }
     }
 
