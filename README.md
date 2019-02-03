@@ -4,7 +4,7 @@
 Develop for mobile devices using Azure IoT SDKs:
 https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-how-to-develop-for-mobile-devices
 
-Android is the only platform implemented right now
+Android is the only platform implemented right now. iOS is stubbed out, but doesn't do anything but log.
  - Uses AMQP over WebSockets
  - You, as connected a device, can subscribe/listen to Device Twin specific desired property changes
  - You, as connected a device, can report Device Twin Reported Properties
@@ -14,29 +14,6 @@ Android is the only platform implemented right now
 
 ### Manual installation
 
-#### iOS Instructions
-$ gem install cocoapods  
-$ cd ios  
-$ pod init
-
-###### these might end up being in the library instead of implemnting app
-
-https://github.com/Azure/azure-iot-sdk-c/blob/master/iothub_client/samples/ios/CocoaPods.md  
-
-Podfile
-```
- pod 'AzureIoTHubClient', '1.2.4'  
- pod 'AzureIoTuAmqp', '1.2.4'
-```
-
-Header searcg path for Objective C usage  
-```
-${PODS_ROOT}/AzureIoTHubClient/inc/
-${PODS_ROOT}/AzureIoTUtility/inc/
-${PODS_ROOT}/AzureIoTuMqtt/inc/
-${PODS_ROOT}/AzureIoTuAmqp/inc/
-```
- 
 
 #### Android Instructions
 
@@ -117,3 +94,31 @@ const joinTheInterwebOfThings = async () =>{
 joinTheInterwebOfThings();
 ```
 
+
+
+
+### iOS Notes for ongoing development:
+
+##### iOS Instructions
+$ gem install cocoapods  
+$ cd ios  
+$ pod init
+
+
+
+https://github.com/Azure/azure-iot-sdk-c/blob/master/iothub_client/samples/ios/CocoaPods.md  
+
+Podfile
+```
+ pod 'AzureIoTHubClient', '1.2.4'  
+ pod 'AzureIoTuAmqp', '1.2.4'
+```
+
+Header searcg path for Objective C usage  
+```
+${PODS_ROOT}/AzureIoTHubClient/inc/
+${PODS_ROOT}/AzureIoTUtility/inc/
+${PODS_ROOT}/AzureIoTuMqtt/inc/
+${PODS_ROOT}/AzureIoTuAmqp/inc/
+```
+ 
