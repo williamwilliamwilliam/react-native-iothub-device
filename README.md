@@ -25,6 +25,10 @@ android/build.gradle
     multiDexEnabled true //Add this line
   }
   
+  packagingOptions {
+    exclude 'thirdpartynotice.txt'
+  }
+  
   dependencies {
     ...
     implementation 'com.android.support:multidex:1.0.3' //and this one
