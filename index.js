@@ -8,7 +8,7 @@ export const {IoTHubDeviceModule} = NativeModules;
  * @param onDesiredPropertyUpdate
  * @returns {Promise}
  */
-export function connectToHub(connectionString, desiredPropertySubscriptions, onDesiredPropertyUpdate){
+export function connectToHub(connectionString, desiredPropertySubscriptions, onConnectionStatusChange, onDeviceTwinPropertyRetrieved, onMessageReceived, onDeviceTwinStatusCallback){
     new NativeEventEmitter(IoTHubDeviceModule).addListener('onDesiredPropertyUpdate', (event) => {
         if(event.propertyJson){
             const property = JSON.parse(event.propertyJson);
@@ -16,10 +16,53 @@ export function connectToHub(connectionString, desiredPropertySubscriptions, onD
         }
     });
 
+    new NativeEventEmitter(IoTHubDeviceModule).addListener('onConnectionStatusChange', (event) => {
+        onConnectionStatusChange(event);
+    });
+
+    /**
+     * All properties retrieved when first connected, and retrieved when an update is made remotely.
+     */
+    new NativeEventEmitter(IoTHubDeviceModule).addListener('onDeviceTwinPropertyRetrieved', (event) => {
+        if(event && event.propertyJson){
+            try {
+                onDeviceTwinPropertyRetrieved(JSON.parse(event.propertyJson));
+            }catch (error){
+                console.error(error);
+            }
+        }
+    });
+
+    /**
+     * When device operations are invoked from this device, IoT Hub will send response messages.
+     */
+    new NativeEventEmitter(IoTHubDeviceModule).addListener('onDeviceTwinStatusCallback', (event) => {
+        onDeviceTwinStatusCallback(event);
+    });
+
+    new NativeEventEmitter(IoTHubDeviceModule).addListener('onMessageReceived', (event) => {
+        onMessageReceived(event);
+    });
+
     return IoTHubDeviceModule.connectToHub(connectionString, desiredPropertySubscriptions);
 }
-export async function subscribeToTwinDesiredProperties(propertyKey, success, failure){
-    return await IoTHubDeviceModule.subscribeToTwinDesiredProperties(propertyKey, success, failure);
+
+export async function requestTwinProperties(){
+    return await IoTHubDeviceModule.requestTwinProperties();
+}
+
+
+/**
+ * Returns Promise. Doesn't actually return device twin - it makes a request to your hub
+ * to send you all Device Twin properties via the onDeviceTwinPropertyRetrieved callback.
+ *
+ * @param propertyKey
+ * @param success
+ * @param failure
+ * @returns {*}
+ */
+export function subscribeToTwinDesiredProperties(propertyKey, success, failure){
+    return IoTHubDeviceModule.subscribeToTwinDesiredProperties(propertyKey, success, failure);
 }
 
 /**
