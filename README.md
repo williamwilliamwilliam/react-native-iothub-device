@@ -73,27 +73,50 @@ Run your app
 ### Usage
 
 ```javascript
-import {connectToHub, reportProperties} from 'react-native-iothub-device';
-
-
 const joinTheInterwebOfThings = async () =>{
-    const connectionString = 'HostName=********.azure-devices.net;DeviceId=***********;SharedAccessKey=****************';
+
+    // Your Connection String here
+    const connectionString = 'HostName=*****************.azure-devices.net;DeviceId=********;SharedAccessKey=************';
+
+    // Any external updates to your device's twin on these desired properties will yield a onDeviceTwinPropertyRetrieved callback
     const desiredPropertySubscriptions = ['tellMe', 'somethingGood'];
-    const onDesiredPropertyUpdate = (property) => {
-        console.log(property); // {key: "tellMe", value: "who's a good device?"}
+
+    const onConnectionStatusChange = (connectionStatus) => {
+        console.log(connectionStatus); // {statusChangeReason: "CONNECTION_OK", status: "CONNECTED"}
+    }
+    const onDeviceTwinPropertyRetrieved = (property) => {
+        console.log(property); // {isReported: false, property: {key: "desiredProperty1", value: "4"}, version: 4}
+    }
+    const onMessageReceived = (message) => {
+        console.log(message); // {key: "tellMe", value: "who's a good device?"}
+    }
+    const onDeviceTwinStatusCallback = (iothubResponse) => {
+        console.log(iothubResponse); // {responseStatus: "OK"}
     }
 
-    await connectToHub(
-        connectionString,
-        desiredPropertySubscriptions,
-        onDesiredPropertyUpdate);
+    try{
+        await connectToHub(
+            connectionString,
+            desiredPropertySubscriptions,
+            onConnectionStatusChange,
+            onDeviceTwinPropertyRetrieved,
+            onMessageReceived,
+            onDeviceTwinStatusCallback);
+    }catch(error){
+        console.error(error);
+    }
 
-    await reportProperties({
-        testBoolean: true,
-        testNumber: new Date().getTime(),
-        testString: "here's something",
-        thisPropertyWontExistOnTheTwinAnymore: null
-    });
+    try{
+        console.log('reporting properties...');
+        await reportProperties({
+            testBoolean: true,
+            testNumber: new Date().getTime(),
+            testString: "here's something",
+            thisPropertyWontExistOnTheTwinAnymore: null
+        });
+    }catch(error){
+        console.error(error);
+    }
 }
 joinTheInterwebOfThings();
 ```
