@@ -85,10 +85,10 @@ const joinTheInterwebOfThings = async () =>{
         console.log(connectionStatus); // {statusChangeReason: "CONNECTION_OK", status: "CONNECTED"}
     }
     const onDeviceTwinPropertyRetrieved = (property) => {
-        console.log(property); // {isReported: false, property: {key: "desiredProperty1", value: "4"}, version: 4}
+        console.log(property); // {isReported: false, property: {key: "tellMe", value: "who's a good device?"}, version: 4}
     }
     const onMessageReceived = (message) => {
-        console.log(message); // {key: "tellMe", value: "who's a good device?"}
+        console.log(message); // anything
     }
     const onDeviceTwinStatusCallback = (iothubResponse) => {
         console.log(iothubResponse); // {responseStatus: "OK"}
